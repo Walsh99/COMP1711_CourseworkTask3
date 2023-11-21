@@ -90,17 +90,12 @@ int main()
             }
         }
     }
-    
-    for (int x = 0; x < linecount; x++)
-    {
-        printf("%s\t%s\t%d\n",listoffitnessdata[x].date, listoffitnessdata[x].time, listoffitnessdata[x].steps);
-    }
 
-    char newfilename[strlen(filename)+4];
+    char newfilename[strlen(filename)+4]; //create new variable for .tsv filename with appropriate length
     strcpy(newfilename, filename);
     strcat(newfilename,".tsv");
 
-    FILE *outputfile = fopen(newfilename, "w"); 
+    FILE *outputfile = fopen(newfilename, "w"); //open new file to write into
     for (int line = 0; line < linecount; line++) 
     {
         fprintf(outputfile, "%s\t%s\t%d\n",listoffitnessdata[line].date, listoffitnessdata[line].time, listoffitnessdata[line].steps);
