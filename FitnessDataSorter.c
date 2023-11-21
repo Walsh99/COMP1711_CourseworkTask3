@@ -55,8 +55,8 @@ int main()
 {
     //Open file
     char *filename = "FitnessData_2023.csv";
-    FILE *file = fopen(filename, "r"); //to read
-    if (file == NULL)
+    FILE *inputfile = fopen(filename, "r"); //to read
+    if (inputfile == NULL)
     {
         perror("");
         return 1;
@@ -64,7 +64,7 @@ int main()
     int buffer_size = 500; //allow up to 500 lines
     char line_buffer[buffer_size];
 
-    while (fgets(line_buffer, buffer_size, file) != NULL) //loop through the csv record by record
+    while (fgets(line_buffer, buffer_size, inputfile) != NULL) //loop through the csv record by record
     {
         tokeniseRecord(line_buffer, ",", tempdate, temptime, tempsteps); //use the tokeniseRecord to 
         //copy all the temporary data from the cycle to the array of fitness_data
@@ -74,6 +74,7 @@ int main()
         
         linecount = linecount + 1; 
     }
+    fclose(inputfile); 
     
     //bubble sort to sort the data by descending order
     for (int i = 0; i < linecount - 1; i++)
@@ -94,8 +95,17 @@ int main()
     {
         printf("%s\t%s\t%d\n",listoffitnessdata[x].date, listoffitnessdata[x].time, listoffitnessdata[x].steps);
     }
-    
 
-    fclose(file); //close the file
+    char newfilename[strlen(filename)+4];
+    strcpy(newfilename, filename);
+    strcat(newfilename,".tsv");
+
+    FILE *outputfile = fopen(newfilename, "w"); 
+    for (int line = 0; line < linecount; line++) 
+    {
+        fprintf(outputfile, "%s\t%s\t%d\n",listoffitnessdata[line].date, listoffitnessdata[line].time, listoffitnessdata[line].steps);
+    }
+    fclose(outputfile);
+    
     return 0;
 }
