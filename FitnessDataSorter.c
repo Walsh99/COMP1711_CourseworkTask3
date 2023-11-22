@@ -54,7 +54,9 @@ void tokeniseRecord(const char *input, const char *delimiter,
 int main() 
 {
     //Open file
-    char *filename = "FitnessData_2023.csv";
+    char filename[20];
+    printf("Enter Filename: ");
+    scanf("%s", filename);
     FILE *inputfile = fopen(filename, "r"); //to read
     if (inputfile == NULL)
     {
@@ -91,16 +93,21 @@ int main()
         }
     }
 
-    char newfilename[strlen(filename)+4]; //create new variable for .tsv filename with appropriate length
+    //create filename for output file using input filename and size
+    char newfilename[strlen(filename)+4];
     strcpy(newfilename, filename);
     strcat(newfilename,".tsv");
 
-    FILE *outputfile = fopen(newfilename, "w"); //open new file to write into
+    FILE *outputfile = fopen(newfilename, "w"); 
+    //write sorted data to output tsv
     for (int line = 0; line < linecount; line++) 
     {
         fprintf(outputfile, "%s\t%s\t%d\n",listoffitnessdata[line].date, listoffitnessdata[line].time, listoffitnessdata[line].steps);
     }
     fclose(outputfile);
+
+    //end
+    printf("Data sorted and written to %s\n", newfilename);
     
     return 0;
 }
