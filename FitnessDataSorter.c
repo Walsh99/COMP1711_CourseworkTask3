@@ -70,6 +70,7 @@ int main()
     {
         tokeniseRecord(line_buffer, ",", tempdate, temptime, tempsteps); //use the tokeniseRecord to 
         //copy all the temporary data from the cycle to the array of fitness_data
+        
         strcpy(listoffitnessdata[linecount].date ,tempdate);
         strcpy(listoffitnessdata[linecount].time, temptime);
         listoffitnessdata[linecount].steps = atoi(tempsteps); //had to use atoi to convert the str to int
