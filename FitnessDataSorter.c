@@ -21,7 +21,7 @@ char tempsteps[4]; //should not pass 9999 steps
 int linecount = 0; //to count number of lines/records in the csv  
 
 // Function to tokenize a record
-void tokeniseRecord(const char *input, const char *delimiter,
+int tokeniseRecord(const char *input, const char *delimiter,
                     char *date, char *time, char *steps) {
     // Create a copy of the input string as strtok modifies the string
     char *inputCopy = strdup(input);
@@ -32,11 +32,19 @@ void tokeniseRecord(const char *input, const char *delimiter,
     {
         strcpy(date, token);
     }
+    else
+    {
+        return 1;
+    }
     
     token = strtok(NULL, delimiter);
     if (token != NULL) 
     {
         strcpy(time, token);
+    }
+    else
+    {
+        return 1;
     }
     
     token = strtok(NULL, delimiter);
@@ -44,10 +52,15 @@ void tokeniseRecord(const char *input, const char *delimiter,
     {  
         strcpy(steps, token);
     }
+    else
+    {
+        return 1;
+    }
     
     // Free the duplicated string
     free(inputCopy);
-
+    
+    return 0;
 }
 
 // Complete the main function
@@ -68,9 +81,18 @@ int main()
 
     while (fgets(line_buffer, buffer_size, inputfile) != NULL) //loop through the csv record by record
     {
+
         tokeniseRecord(line_buffer, ",", tempdate, temptime, tempsteps); //use the tokeniseRecord to 
         //copy all the temporary data from the cycle to the array of fitness_data
-        
+
+        //printf("%s/%s/%s", tempdate, temptime, tempsteps);
+        //printf("%ld/%ld/%ld\n", strlen(tempdate), strlen(temptime), strlen(tempsteps));
+        if (strlen(tempsteps) == 2)
+        {    
+            printf("variable missing in csv, error occured");
+            return 1;
+        }
+
         strcpy(listoffitnessdata[linecount].date ,tempdate);
         strcpy(listoffitnessdata[linecount].time, temptime);
         listoffitnessdata[linecount].steps = atoi(tempsteps); //had to use atoi to convert the str to int
