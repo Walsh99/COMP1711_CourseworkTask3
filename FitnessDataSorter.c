@@ -81,17 +81,19 @@ int main()
 
     while (fgets(line_buffer, buffer_size, inputfile) != NULL) //loop through the csv record by record
     {
+        if(tokeniseRecord(line_buffer, ",", tempdate, temptime, tempsteps) == 1)
+        {
+            return 1;
+        }
+        //copy all the temporary data from the cycle to the array of fitness_data whilst checking if NULL data then return 1
 
-        tokeniseRecord(line_buffer, ",", tempdate, temptime, tempsteps); //use the tokeniseRecord to 
-        //copy all the temporary data from the cycle to the array of fitness_data
-
-        //printf("%s/%s/%s", tempdate, temptime, tempsteps);
-        //printf("%ld/%ld/%ld\n", strlen(tempdate), strlen(temptime), strlen(tempsteps));
-        if (strlen(tempsteps) == 2)
+        //needs fixing 
+        if (strlen(tempsteps) == 2 || strlen(tempdate) == 0 || strlen(temptime) == 0)
         {    
             printf("variable missing in csv, error occured");
             return 1;
         }
+        
 
         strcpy(listoffitnessdata[linecount].date ,tempdate);
         strcpy(listoffitnessdata[linecount].time, temptime);
