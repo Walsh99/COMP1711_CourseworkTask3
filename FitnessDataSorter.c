@@ -106,7 +106,7 @@ int main()
     {
         for (int j = 0; j < linecount - 1; j++)
         {
-            if (listoffitnessdata[j].steps > listoffitnessdata[j + 1].steps)
+            if (listoffitnessdata[j].steps < listoffitnessdata[j + 1].steps)
             {
                 //swap array[j] and array[j + 1] around
                 FITNESS_DATA temp = listoffitnessdata[j];
