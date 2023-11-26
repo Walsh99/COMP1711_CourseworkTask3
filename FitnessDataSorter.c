@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_RECORDS 500
+#define MAX_BUFFER_SIZE 500
+
 // Define an appropriate struct
 typedef struct {
 	char date[11];
@@ -11,7 +14,7 @@ typedef struct {
 
 // Define any additional variables here
 //create an array of type FITNESS_DATA to store the records
-FITNESS_DATA listoffitnessdata[500]; //given up to 500 records
+FITNESS_DATA listoffitnessdata[MAX_RECORDS]; //given up to 500 records
 
 //create temp variables to then move into the typedef array
 char tempdate[11]; //using typedef
@@ -59,7 +62,7 @@ int tokeniseRecord(const char *input, const char *delimiter,
     
     // Free the duplicated string
     free(inputCopy);
-    
+
     return 0;
 }
 
@@ -76,24 +79,18 @@ int main()
         perror("");
         return 1;
     }
-    int buffer_size = 500; //allow up to 500 lines
+
+    int buffer_size = MAX_BUFFER_SIZE; //allow up to 500 lines
     char line_buffer[buffer_size];
 
     while (fgets(line_buffer, buffer_size, inputfile) != NULL) //loop through the csv record by record
     {
-        if(tokeniseRecord(line_buffer, ",", tempdate, temptime, tempsteps) == 1)
+        if(tokeniseRecord(line_buffer, ",", tempdate, temptime, tempsteps) != 0)
         {
+            printf("error bad data in csv file");
             return 1;
         }
         //copy all the temporary data from the cycle to the array of fitness_data whilst checking if NULL data then return 1
-
-        //needs fixing 
-        if (strlen(tempsteps) == 2 || strlen(tempdate) == 0 || strlen(temptime) == 0)
-        {    
-            printf("variable missing in csv, error occured");
-            return 1;
-        }
-        
 
         strcpy(listoffitnessdata[linecount].date ,tempdate);
         strcpy(listoffitnessdata[linecount].time, temptime);
@@ -119,7 +116,7 @@ int main()
     }
 
     //create filename for output file using input filename and size
-    char newfilename[strlen(filename)+4];
+    char newfilename[strlen(filename)+5]; //4 for .tsv + 1 for null terminator
     strcpy(newfilename, filename);
     strcat(newfilename,".tsv");
 
