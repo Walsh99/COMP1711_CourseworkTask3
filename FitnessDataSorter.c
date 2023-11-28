@@ -24,7 +24,7 @@ char tempsteps[4]; //should not pass 9999 steps
 int linecount = 0; //to count number of lines/records in the csv  
 
 // Function to tokenize a record
-int tokeniseRecord(const char *input, const char *delimiter,
+void tokeniseRecord(const char *input, const char *delimiter,
                     char *date, char *time, char *steps) {
     // Create a copy of the input string as strtok modifies the string
     char *inputCopy = strdup(input);
@@ -35,19 +35,11 @@ int tokeniseRecord(const char *input, const char *delimiter,
     {
         strcpy(date, token);
     }
-    else
-    {
-        return 1;
-    }
     
     token = strtok(NULL, delimiter);
     if (token != NULL) 
     {
         strcpy(time, token);
-    }
-    else
-    {
-        return 1;
     }
     
     token = strtok(NULL, delimiter);
@@ -55,15 +47,10 @@ int tokeniseRecord(const char *input, const char *delimiter,
     {  
         strcpy(steps, token);
     }
-    else
-    {
-        return 1;
-    }
-    
+
     // Free the duplicated string
     free(inputCopy);
 
-    return 0;
 }
 
 // Complete the main function
@@ -85,16 +72,29 @@ int main()
 
     while (fgets(line_buffer, buffer_size, inputfile) != NULL) //loop through the csv record by record
     {
-        if(tokeniseRecord(line_buffer, ",", tempdate, temptime, tempsteps) != 0)
-        {
-            printf("error bad data in csv file");
-            return 1;
-        }
+        tokeniseRecord(line_buffer, ",", tempdate, temptime, tempsteps);
         //copy all the temporary data from the cycle to the array of fitness_data whilst checking if NULL data then return 1
 
         strcpy(listoffitnessdata[linecount].date ,tempdate);
         strcpy(listoffitnessdata[linecount].time, temptime);
         listoffitnessdata[linecount].steps = atoi(tempsteps); //had to use atoi to convert the str to int
+    
+        //check for bad data
+        if (!strcmp(listoffitnessdata[linecount].date, "")) 
+        {
+            printf("Error: Bad Data");
+            return 1;
+        }
+        if (!strcmp(listoffitnessdata[linecount].time, "")) 
+        {    
+            printf("Error: Bad Data");
+            return 1;
+        }
+        if (listoffitnessdata[linecount].steps <= 0) 
+        {
+            printf("Error: Bad Data");
+            return 1;
+        }
         
         linecount = linecount + 1; 
     }
